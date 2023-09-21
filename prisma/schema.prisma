@@ -15,7 +15,7 @@ model users{
   id Int @id @default(autoincrement())
   name String
   email String @unique
-  password String
+  password String?
   token String?
   reset_password_token String?
   created_at DateTime?
