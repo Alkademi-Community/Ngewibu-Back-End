@@ -7,20 +7,144 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-
-model users{
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
-  password String
-  token String?
-  reset_password_token String?
-  created_at DateTime?
-  updated_at DateTime?
+// lookup migrations
+model roles {
+  id         Int       @id @default(autoincrement())
+  name       String
+  users      users[]
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
   deleted_at DateTime?
 }
 
+model genders {
+  id            Int             @id @default(autoincrement())
+  name          String
+  created_at    DateTime?       @default(now())
+  updated_at    DateTime?       @updatedAt
+  deleted_at    DateTime?
+  user_profiles user_profiles[]
+}
+
+model event_types {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+  events     events[]
+}
+
+model event_statuses {
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+  events     events[]
+}
+
+model cities {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+  events     events[]
+}
+
+// user related migrations
+model users {
+  id                   Int                 @id @default(autoincrement())
+  role                 roles               @relation(fields: [role_id], references: [id])
+  role_id              Int
+  name                 String
+  email                String              @unique
+  username             String              @unique
+  password             String
+  token                String?
+  reset_password_token String?
+  created_at           DateTime?           @default(now())
+  updated_at           DateTime?           @updatedAt
+  deleted_at           DateTime?
+  user_profiles        user_profiles[]
+  event_participats    event_participats[]
+  comments             comments[]
+  likes                likes[]
+}
+
+model user_profiles {
+  id            Int       @id @default(autoincrement())
+  user          users     @relation(fields: [user_id], references: [id])
+  user_id       Int
+  gender        genders   @relation(fields: [gender_id], references: [id])
+  gender_id     Int
+  name          String
+  address       String?
+  bio           String?
+  date_of_birth DateTime?
+  image_url     String?
+  created_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt
+  deleted_at    DateTime?
+}
+
+// event related migrations
+model events {
+  id                Int                 @id @default(autoincrement())
+  event_type        event_types         @relation(fields: [event_type_id], references: [id])
+  event_type_id     Int
+  event_status      event_statuses      @relation(fields: [event_status_id], references: [id])
+  event_status_id   Int
+  city              cities              @relation(fields: [city_id], references: [id])
+  city_id           Int
+  title             String              @unique
+  description       String?
+  address           String
+  map_url           String?
+  meet_url          String?
+  start_date        DateTime
+  end_date          DateTime
+  created_at        DateTime?           @default(now())
+  updated_at        DateTime?           @updatedAt
+  deleted_at        DateTime?
+  event_participats event_participats[]
+}
+
+model event_participats {
+  id         Int       @id @default(autoincrement())
+  event      events    @relation(fields: [event_id], references: [id])
+  event_id   Int
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+}
+
+model comments {
+  id         Int       @id @default(autoincrement())
+  parent_id  Int
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  type       Int
+  content    String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+}
+
+model likes {
+  id         Int       @id @default(autoincrement())
+  parent_id  Int
+  user       users     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  type       Int
+  like       Int
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+  deleted_at DateTime?
+}
