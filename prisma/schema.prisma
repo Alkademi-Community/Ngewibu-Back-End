@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -89,8 +89,8 @@ model User {
   eventParticipants  EventParticipant[]
   comments           Comment[]
   likes              Like[]
-  isActivated        Int                @default(0) @db.TinyInt()
-  isVerified         Int                @default(0) @db.TinyInt()
+  isActivated        Int                @default(0) @db.SmallInt()
+  isVerified         Int                @default(0) @db.SmallInt()
   createdAt          DateTime?          @default(now())
   updatedAt          DateTime?          @updatedAt
   deletedAt          DateTime?
