@@ -112,6 +112,8 @@ model events {
   updated_at        DateTime?           @updatedAt
   deleted_at        DateTime?
   event_participats event_participats[]
+  comments          comments[]
+  likes             likes[]
 }
 
 model event_participats {
@@ -127,7 +129,8 @@ model event_participats {
 
 model comments {
   id         Int       @id @default(autoincrement())
-  parent_id  Int
+  event      events    @relation(fields: [event_id], references: [id])
+  event_id   Int
   user       users     @relation(fields: [user_id], references: [id])
   user_id    Int
   type       Int
@@ -139,7 +142,8 @@ model comments {
 
 model likes {
   id         Int       @id @default(autoincrement())
-  parent_id  Int
+  event      events    @relation(fields: [event_id], references: [id])
+  event_id   Int
   user       users     @relation(fields: [user_id], references: [id])
   user_id    Int
   type       Int
