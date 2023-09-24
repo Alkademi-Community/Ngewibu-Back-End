@@ -12,143 +12,170 @@ datasource db {
 }
 
 // lookup migrations
-model roles {
-  id         Int       @id @default(autoincrement())
-  name       String
-  users      users[]
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
+model Role {
+  id        Int       @id @default(autoincrement())
+  name      String
+  users     User[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 }
 
-model genders {
-  id            Int             @id @default(autoincrement())
+model Gender {
+  id            Int           @id @default(autoincrement())
   name          String
-  created_at    DateTime?       @default(now())
-  updated_at    DateTime?       @updatedAt
-  deleted_at    DateTime?
-  user_profiles user_profiles[]
+  user_profiles UserProfile[]
+  createdAt     DateTime?     @default(now())
+  updatedAt     DateTime?     @updatedAt
+  deletedAt     DateTime?
 }
 
-model event_types {
-  id         Int       @id @default(autoincrement())
-  name       String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
-  events     events[]
+model EventType {
+  id        Int       @id @default(autoincrement())
+  name      String
+  events    Event[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 }
 
-model event_statuses {
-  id         Int       @id @default(autoincrement())
-  name       String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
-  events     events[]
+model EventStatus {
+  id        Int       @id @default(autoincrement())
+  name      String
+  events    Event[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 }
 
-model cities {
-  id         Int       @id @default(autoincrement())
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
-  events     events[]
+model City {
+  id        Int       @id @default(autoincrement())
+  events    Event[]
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+}
+
+model CommentType {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  Comment   Comment[]
+}
+
+model LikeType {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
+  Like      Like[]
 }
 
 // user related migrations
-model users {
-  id                   Int                 @id @default(autoincrement())
-  role                 roles               @relation(fields: [role_id], references: [id])
-  role_id              Int
-  name                 String
-  email                String              @unique
-  username             String              @unique
-  password             String
-  token                String?
-  reset_password_token String?
-  created_at           DateTime?           @default(now())
-  updated_at           DateTime?           @updatedAt
-  deleted_at           DateTime?
-  user_profiles        user_profiles[]
-  event_participats    event_participats[]
-  comments             comments[]
-  likes                likes[]
+model User {
+  id                 Int                @id @default(autoincrement())
+  role               Role               @relation(fields: [roleId], references: [id])
+  roleId             Int
+  name               String
+  email              String             @unique
+  username           String             @unique
+  password           String
+  token              String?
+  resetPasswordToken String?
+  userProfile        UserProfile[]
+  eventParticipants  EventParticipant[]
+  comments           Comment[]
+  likes              Like[]
+  isActivated        Int                @default(0) @db.TinyInt()
+  isVerified         Int                @default(0) @db.TinyInt()
+  createdAt          DateTime?          @default(now())
+  updatedAt          DateTime?          @updatedAt
+  deletedAt          DateTime?
 }
 
-model user_profiles {
-  id            Int       @id @default(autoincrement())
-  user          users     @relation(fields: [user_id], references: [id])
-  user_id       Int
-  gender        genders   @relation(fields: [gender_id], references: [id])
-  gender_id     Int
-  name          String
-  address       String?
-  bio           String?
-  date_of_birth DateTime?
-  image_url     String?
-  created_at    DateTime? @default(now())
-  updated_at    DateTime? @updatedAt
-  deleted_at    DateTime?
+model UserProfile {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  gender      Gender    @relation(fields: [genderId], references: [id])
+  genderId    Int
+  name        String
+  address     String?
+  bio         String?
+  dateOfBirth DateTime? @db.Date()
+  imageUrl    String?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   DateTime?
 }
 
 // event related migrations
-model events {
-  id                Int                 @id @default(autoincrement())
-  event_type        event_types         @relation(fields: [event_type_id], references: [id])
-  event_type_id     Int
-  event_status      event_statuses      @relation(fields: [event_status_id], references: [id])
-  event_status_id   Int
-  city              cities              @relation(fields: [city_id], references: [id])
-  city_id           Int
-  title             String              @unique
+model Event {
+  id                Int                @id @default(autoincrement())
+  eventType         EventType          @relation(fields: [eventTypeId], references: [id])
+  eventTypeId       Int
+  eventStatus       EventStatus        @relation(fields: [eventStatusId], references: [id])
+  eventStatusId     Int
+  city              City               @relation(fields: [cityId], references: [id])
+  cityId            Int
+  title             String
+  slug              String             @unique
   description       String?
   address           String
-  map_url           String?
-  meet_url          String?
-  start_date        DateTime
-  end_date          DateTime
-  created_at        DateTime?           @default(now())
-  updated_at        DateTime?           @updatedAt
-  deleted_at        DateTime?
-  event_participats event_participats[]
-  comments          comments[]
-  likes             likes[]
+  mapUrl            String?
+  meetUrl           String?
+  startDate         DateTime
+  endDate           DateTime
+  eventParticipants EventParticipant[]
+  comments          Comment[]
+  likes             Like[]
+  createdAt         DateTime?          @default(now())
+  updatedAt         DateTime?          @updatedAt
+  deletedAt         DateTime?
 }
 
-model event_participats {
-  id         Int       @id @default(autoincrement())
-  event      events    @relation(fields: [event_id], references: [id])
-  event_id   Int
-  user       users     @relation(fields: [user_id], references: [id])
-  user_id    Int
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
+model EventParticipant {
+  id        Int       @id @default(autoincrement())
+  event     Event     @relation(fields: [eventId], references: [id])
+  eventId   Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 }
 
-model comments {
-  id         Int       @id @default(autoincrement())
-  event      events    @relation(fields: [event_id], references: [id])
-  event_id   Int
-  user       users     @relation(fields: [user_id], references: [id])
-  user_id    Int
-  type       Int
-  content    String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
+model Comment {
+  id        Int         @id @default(autoincrement())
+  event     Event       @relation(fields: [parentId], references: [id], map: "comment_event_fk")
+  user      User        @relation(fields: [userId], references: [id])
+  userId    Int
+  Children  Comment[]   @relation("Comment_Children")
+  parent    Comment?    @relation("Comment_Children", fields: [parentId], references: [id], map: "comment_comment_fk")
+  parentId  Int
+  type      CommentType @relation(fields: [typeId], references: [id])
+  typeId    Int
+  content   String
+  createdAt DateTime?   @default(now())
+  updatedAt DateTime?   @updatedAt
+  deletedAt DateTime?
+  Like      Like[]
 }
 
-model likes {
-  id         Int       @id @default(autoincrement())
-  event      events    @relation(fields: [event_id], references: [id])
-  event_id   Int
-  user       users     @relation(fields: [user_id], references: [id])
-  user_id    Int
-  type       Int
-  like       Int
-  created_at DateTime? @default(now())
-  updated_at DateTime? @updatedAt
-  deleted_at DateTime?
+model Like {
+  id        Int       @id @default(autoincrement())
+  event     Event     @relation(fields: [parentId], references: [id], map: "like_event_fk")
+  comment   Comment   @relation(fields: [parentId], references: [id], map: "like_comment_fk")
+  parentId  Int
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  type      LikeType  @relation(fields: [typeId], references: [id])
+  typeId    Int
+  like      Int
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  deletedAt DateTime?
 }
