@@ -1,40 +1,45 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
-import { User } from './user.model'
+import { Controller, Get, Req, UseGuards } from '@nestjs/common'
 import { UserService } from './user.service'
-import { create } from 'domain'
-import { Request, Response } from '@nestjs/common'
+import { Request } from 'express'
+import { IsAuthenticated } from 'src/guard/is-authenticated.guard'
+import { User } from '@prisma/client'
+import { ResponseData } from 'src/types/response'
+import * as httpStatus from 'http-status'
+import AuthMessage from 'src/constants/auth.constant'
 
-@Controller('api/v1/user')
+@Controller('user')
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
 
-  @Get()
-  async getUsers(@Req() request: Request, @Res() response: Response): Promise<User[]> {
-    const result = await this.userService.getAllUsers()
-    return response.status(200).json({
+  /**
+   * Get one specific user record by username
+   * @param {any} 'profile/:username'
+   * @returns {any}
+   */
+  @Get('profile/:username')
+  @UseGuards(IsAuthenticated)
+  public async profile(@Req() request: Request) {
+    const user: User | undefined | null = await this.userService.findOne(
+      request?.params?.username,
+    )
+    let response: ResponseData
+
+    const userIsNotFound = [null, undefined].includes(user)
+    if (userIsNotFound) {
+      response = {
+        status: false,
+        status_code: httpStatus.NOT_FOUND,
+        message: AuthMessage.USER_NOT_FOUND,
+      }
+      return response
+    }
+
+    response = {
       status: true,
-      message: "",
-      data: result
-    })
-  }
-
-  @Get(':id')
-  async getUser(@Param('id') id: number): Promise<User> {
-    return this.userService.getUser(id)
-  }
-
-  @Post()
-  async createUser(@Body() postData: User): Promise<User> {
-    return this.userService.registerUser(postData)
-  }
-
-  @Put(':id')
-  async updatedUser(@Param('id') id: number, @Body() updateData: User): Promise<User> {
-    return this.userService.updateUser(id, updateData)
-  }
-
-  @Delete(':id')
-  async deleteUser(@Param('id') id: number): Promise<User> {
-    return this.userService.deleteUser(id)
+      status_code: httpStatus.OK,
+      message: '',
+      data: user,
+    }
+    return response
   }
 }
