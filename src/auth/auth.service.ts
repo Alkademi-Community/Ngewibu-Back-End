@@ -5,7 +5,9 @@ import * as httpStatus from 'http-status'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import AuthMessage from 'src/constants/auth.constant'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Auth')
 @Injectable()
 export class AuthService {
   constructor(
