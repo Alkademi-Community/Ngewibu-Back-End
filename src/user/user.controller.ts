@@ -6,7 +6,9 @@ import { User } from '@prisma/client'
 import { ResponseData } from 'src/types/response'
 import * as httpStatus from 'http-status'
 import AuthMessage from 'src/constants/auth.constant'
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -16,7 +18,13 @@ export class UserController {
    * @param {any} 'profile/:username'
    * @returns {any}
    */
+
   @Get('profile/:username')
+  @ApiBearerAuth('Authorization')
+  @ApiParam({
+    name: 'username',
+    example: 'johndoe123',
+  })
   @UseGuards(IsAuthenticated)
   public async profile(@Req() request: Request) {
     const user: User | undefined | null = await this.userService.findOne(
