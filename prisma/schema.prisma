@@ -76,7 +76,7 @@ model LikeType {
 // user related migrations
 model User {
   id                 Int                @id @unique @default(autoincrement())
-  role               Role?              @relation(fields: [roleId], references: [id])
+  role               Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
   roleId             Int
   email              String             @unique
   username           String             @unique
@@ -96,7 +96,7 @@ model User {
 
 model UserProfile {
   id          Int       @id @default(autoincrement())
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   gender      Gender    @relation(fields: [genderId], references: [id])
   genderId    Int
