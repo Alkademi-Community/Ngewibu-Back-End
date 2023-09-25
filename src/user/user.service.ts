@@ -47,6 +47,7 @@ export class UserService {
       where: { username },
       include: {
         role: true,
+        userProfile: true,
       },
     })
 
