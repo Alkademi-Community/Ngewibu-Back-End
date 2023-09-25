@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Res } from '@nestjs/common'
 import { User } from './user.model'
 import { UserService } from './user.service'
-import { create } from 'domain'
 import { Request, Response } from '@nestjs/common'
 
 @Controller('api/v1/user')
@@ -11,11 +10,7 @@ export class UserController {
   @Get()
   async getUsers(@Req() request: Request, @Res() response: Response): Promise<User[]> {
     const result = await this.userService.getAllUsers()
-    return response.status(200).json({
-      status: true,
-      message: "",
-      data: result
-    })
+    return result
   }
 
   @Get(':id')

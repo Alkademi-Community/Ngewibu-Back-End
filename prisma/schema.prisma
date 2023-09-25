@@ -50,6 +50,7 @@ model EventStatus {
 
 model City {
   id        Int       @id @default(autoincrement())
+  name      String
   events    Event[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -77,20 +78,19 @@ model LikeType {
 // user related migrations
 model User {
   id                 Int                @id @default(autoincrement())
-  role               Role               @relation(fields: [roleId], references: [id])
-  roleId             Int
-  name               String
-  email              String             @unique
   username           String             @unique
   password           String
+  email              String             @unique
   token              String?
+  isActivated        Int                @default(0) @db.SmallInt()
+  isVerified         Int                @default(0) @db.SmallInt()
+  role               Role               @relation(fields: [roleId], references: [id])
+  roleId             Int
   resetPasswordToken String?
   userProfile        UserProfile[]
   eventParticipants  EventParticipant[]
   comments           Comment[]
   likes              Like[]
-  isActivated        Int                @default(0) @db.SmallInt()
-  isVerified         Int                @default(0) @db.SmallInt()
   createdAt          DateTime?          @default(now())
   updatedAt          DateTime?          @updatedAt
   deletedAt          DateTime?
