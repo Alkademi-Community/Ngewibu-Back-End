@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import { ValidationPipe } from '@nestjs/common'
 import { BadRequestExceptionFilter } from './filter/badrequest.exception'
@@ -21,6 +22,24 @@ async function bootstrap() {
   app.useGlobalFilters(new NotFoundExceptionFilter())
   app.useGlobalFilters(new UnauthorizedExceptionFilter())
   app.useGlobalFilters(new InternalServerErrorExceptionFilter())
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Ngewibu API')
+    .setDescription('Ngewibu API Documentation')
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'apiKey',
+        in: 'header',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+      },
+      'Authorization',
+    )
+    .build()
+  const document = SwaggerModule.createDocument(app, swaggerConfig)
+  SwaggerModule.setup('api', app, document)
 
   await app.listen(config.get('server_port'))
 }
