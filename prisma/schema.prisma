@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "prisma-generated/client"
 }
 
 datasource db {
@@ -76,13 +75,12 @@ model LikeType {
 
 // user related migrations
 model User {
-  id                 Int                @id @default(autoincrement())
-  role               Role               @relation(fields: [roleId], references: [id])
+  id                 Int                @id @unique @default(autoincrement())
+  role               Role?              @relation(fields: [roleId], references: [id])
   roleId             Int
-  name               String
   email              String             @unique
   username           String             @unique
-  password           String
+  password           String?
   token              String?
   resetPasswordToken String?
   userProfile        UserProfile[]
