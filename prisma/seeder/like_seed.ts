@@ -11,7 +11,8 @@ function fakerLikeType(): any {
 
 function fakerLike(faker): any {
     return {
-        parentId: faker.number.int({ min: 1, max: 10 }),
+        eventId: faker.number.int({ min: 1, max: 10 }),
+        commentId: faker.helpers.arrayElement([null, null, null, null, null, null, null, 2, null, 3, null, 5, null, null, 1, 4, null, null, null, null]),
         userId: faker.number.int({ min: 1, max: 10 }),
         typeId: faker.number.int({ min: 1, max: 2 }),
         like: 1,
@@ -19,13 +20,14 @@ function fakerLike(faker): any {
 };
 
 export async function LikeSeeder(prisma, faker) {
-    let like_type = fakerLikeType()
-    for (let i = 0; i < like_type.length; i++) {
-        await prisma.likeType.create({ data: like_type[i] });
-    }
+    // let like_type = fakerLikeType()
+    // for (let i = 0; i < like_type.length; i++) {
+    //     await prisma.likeType.create({ data: like_type[i] });
+    // }
 
     for (let i = 0; i < 10; i++) {
         let like = fakerLike(faker)
+        console.log({ like })
         await prisma.like.create({ data: like });
     }
 };

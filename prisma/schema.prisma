@@ -57,23 +57,23 @@ model City {
   deletedAt DateTime?
 }
 
-model CommentType {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  deletedAt DateTime?
-  Comment   Comment[]
-}
+// model CommentType {
+//   id        Int       @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime? @default(now())
+//   updatedAt DateTime? @updatedAt
+//   deletedAt DateTime?
+//   Comment   Comment[]
+// }
 
-model LikeType {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  deletedAt DateTime?
-  Like      Like[]
-}
+// model LikeType {
+//   id        Int       @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime? @default(now())
+//   updatedAt DateTime? @updatedAt
+//   deletedAt DateTime?
+//   Like      Like[]
+// }
 
 // user related migrations
 model User {
@@ -149,31 +149,33 @@ model EventParticipant {
 }
 
 model Comment {
-  id        Int         @id @default(autoincrement())
-  event     Event       @relation(fields: [parentId], references: [id], map: "comment_event_fk")
-  user      User        @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  event     Event     @relation(fields: [eventId], references: [id], map: "comment_event_fk")
+  eventId   Int
+  user      User      @relation(fields: [userId], references: [id])
   userId    Int
-  Children  Comment[]   @relation("Comment_Children")
-  parent    Comment?    @relation("Comment_Children", fields: [parentId], references: [id], map: "comment_comment_fk")
-  parentId  Int
-  type      CommentType @relation(fields: [typeId], references: [id])
-  typeId    Int
+  Children  Comment[] @relation("Comment_Children")
+  comment   Comment?  @relation("Comment_Children", fields: [commentId], references: [id], map: "comment_comment_fk")
+  commentId Int?
+  // type      CommentType @relation(fields: [typeId], references: [id])
+  // typeId    Int
   content   String
-  createdAt DateTime?   @default(now())
-  updatedAt DateTime?   @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
   deletedAt DateTime?
   Like      Like[]
 }
 
 model Like {
   id        Int       @id @default(autoincrement())
-  event     Event     @relation(fields: [parentId], references: [id], map: "like_event_fk")
-  comment   Comment   @relation(fields: [parentId], references: [id], map: "like_comment_fk")
-  parentId  Int
+  event     Event     @relation(fields: [eventId], references: [id], map: "like_event_fk")
+  eventId   Int
+  comment   Comment?  @relation(fields: [commentId], references: [id], map: "like_comment_fk")
+  commentId Int?
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
-  type      LikeType  @relation(fields: [typeId], references: [id])
-  typeId    Int
+  // type      LikeType  @relation(fields: [typeId], references: [id])
+  // typeId    Int
   like      Int
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

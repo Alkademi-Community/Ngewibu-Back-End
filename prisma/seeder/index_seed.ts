@@ -11,6 +11,7 @@ import { EventSeeder } from './event_seed';
 import { EventParticipantsSeeder } from './event_participant_seed';
 import { CommentSeeder } from './comment_seed';
 import { LikeSeeder } from './like_seed';
+import { CitySeeder } from './city_seed';
 
 const prisma = new PrismaClient();
 // const faker = new Faker({ locale: [id_ID] });
@@ -26,6 +27,9 @@ async function main() {
 
     /// --------- Users ---------------
     await UserSeeder(prisma, faker)
+
+    /// --------- Cities Type ---------------
+    await CitySeeder(prisma, faker)
 
     /// --------- Events Type ---------------
     await EventTypeSeeder(prisma, faker)
