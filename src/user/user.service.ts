@@ -43,8 +43,8 @@ export class UserService {
     username: string,
     withPasswordField: boolean = false,
   ): Promise<UserWithRole | undefined | null> {
-    const user = await this.prisma.user.findUnique({
-      where: { username },
+    const user = await this.prisma.user.findFirst({
+      where: { OR: [{ username }, { email: username }] },
       include: {
         role: true,
         userProfile: true,
