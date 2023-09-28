@@ -11,7 +11,7 @@ import AuthMessage from 'src/constants/auth.constant'
 import { ConfigService } from '@nestjs/config'
 
 /**
- * To verify the given token and make sure the given token is a valid jwt token
+ * To verify the given token and make sure the given token is a valid jwt token and make sure user is authenticated
  * @returns {any}
  */
 @Injectable()
