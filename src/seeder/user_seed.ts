@@ -28,7 +28,29 @@ function fakerUser(faker): [any, any] {
 };
 
 export async function UserSeeder(prisma, faker) {
-    for (let i = 0; i < 20; i++) {
+    await prisma.user.create({
+        data:
+        {
+            id: 0,
+            username: 'admin',
+            password: "admin@111",
+            email: 'admin@ngewibu.com',
+            roleId: 2,
+        },
+    });
+    await prisma.userProfile.create({
+        data: {
+            userId: 0,
+            genderId: 1,
+            name: 'admin',
+            address: faker.location.streetAddress({ useFullAddress: true }),
+            bio: faker.word.words(30),
+            dateOfBirth: faker.date.birthdate(),
+            imageUrl: faker.image.url(),
+        }
+    });
+
+    for (let i = 1; i <= 20; i++) {
         let [user, userProfile] = fakerUser(faker)
         user.id = i;
         userProfile.userId = i;

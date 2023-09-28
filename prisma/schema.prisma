@@ -156,8 +156,6 @@ model Comment {
   Children  Comment[] @relation("Comment_Children")
   comment   Comment?  @relation("Comment_Children", fields: [commentId], references: [id], map: "comment_comment_fk")
   commentId Int?
-  // type      CommentType @relation(fields: [typeId], references: [id])
-  // typeId    Int
   content   String
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -173,8 +171,6 @@ model Like {
   commentId Int?
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
-  // type      LikeType  @relation(fields: [typeId], references: [id])
-  // typeId    Int
   like      Int
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

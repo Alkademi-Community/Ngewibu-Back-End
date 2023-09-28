@@ -13,8 +13,8 @@ function fakerComment(faker): any {
     return {
         userId: faker.number.int({ min: 1, max: 10 }),
         eventId: faker.number.int({ min: 1, max: 10 }),
-        commentId: faker.helpers.arrayElement([null, null, null, null, null, null, null, 2, null, 3, null, 5, null, null, 1, 4, null, null, null, null]),
-        typeId: faker.number.int({ min: 1, max: 2 }),
+        commentId: faker.helpers.arrayElement([null, null, null, null, null, null, null, 2, null, 1, null, 1, null, null, 2, 2, null, null, null, null]),
+        // typeId: faker.number.int({ min: 1, max: 2 }),
         content: faker.word.words({ count: { min: 3, max: 30 } }),
     }
 };
@@ -27,7 +27,6 @@ export async function CommentSeeder(prisma, faker) {
 
     for (let i = 0; i < 30; i++) {
         let comment = fakerComment(faker)
-        console.log({ comment })
         await prisma.comment.create({ data: comment });
     }
 };
