@@ -49,46 +49,47 @@ model EventStatus {
 
 model City {
   id        Int       @id @default(autoincrement())
+  name      String
   events    Event[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
   deletedAt DateTime?
 }
 
-model CommentType {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  deletedAt DateTime?
-  Comment   Comment[]
-}
+// model CommentType {
+//   id        Int       @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime? @default(now())
+//   updatedAt DateTime? @updatedAt
+//   deletedAt DateTime?
+//   Comment   Comment[]
+// }
 
-model LikeType {
-  id        Int       @id @default(autoincrement())
-  name      String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  deletedAt DateTime?
-  Like      Like[]
-}
+// model LikeType {
+//   id        Int       @id @default(autoincrement())
+//   name      String
+//   createdAt DateTime? @default(now())
+//   updatedAt DateTime? @updatedAt
+//   deletedAt DateTime?
+//   Like      Like[]
+// }
 
 // user related migrations
 model User {
-  id                 Int                @id @unique @default(autoincrement())
-  role               Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId             Int
-  email              String             @unique
+  id                 Int                @id @default(autoincrement())
   username           String             @unique
-  password           String?
+  password           String
+  email              String             @unique
   token              String?
+  isActivated        Int                @default(0) @db.SmallInt()
+  isVerified         Int                @default(0) @db.SmallInt()
+  role               Role               @relation(fields: [roleId], references: [id])
+  roleId             Int
   resetPasswordToken String?
   userProfile        UserProfile[]
   eventParticipants  EventParticipant[]
   comments           Comment[]
   likes              Like[]
-  isActivated        Int                @default(0) @db.SmallInt()
-  isVerified         Int                @default(0) @db.SmallInt()
   createdAt          DateTime?          @default(now())
   updatedAt          DateTime?          @updatedAt
   deletedAt          DateTime?
@@ -147,31 +148,33 @@ model EventParticipant {
 }
 
 model Comment {
-  id        Int         @id @default(autoincrement())
-  event     Event       @relation(fields: [parentId], references: [id], map: "comment_event_fk")
-  user      User        @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  event     Event     @relation(fields: [eventId], references: [id], map: "comment_event_fk")
+  eventId   Int
+  user      User      @relation(fields: [userId], references: [id])
   userId    Int
-  Children  Comment[]   @relation("Comment_Children")
-  parent    Comment?    @relation("Comment_Children", fields: [parentId], references: [id], map: "comment_comment_fk")
-  parentId  Int
-  type      CommentType @relation(fields: [typeId], references: [id])
-  typeId    Int
+  Children  Comment[] @relation("Comment_Children")
+  comment   Comment?  @relation("Comment_Children", fields: [commentId], references: [id], map: "comment_comment_fk")
+  commentId Int?
+  // type      CommentType @relation(fields: [typeId], references: [id])
+  // typeId    Int
   content   String
-  createdAt DateTime?   @default(now())
-  updatedAt DateTime?   @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
   deletedAt DateTime?
   Like      Like[]
 }
 
 model Like {
   id        Int       @id @default(autoincrement())
-  event     Event     @relation(fields: [parentId], references: [id], map: "like_event_fk")
-  comment   Comment   @relation(fields: [parentId], references: [id], map: "like_comment_fk")
-  parentId  Int
+  event     Event     @relation(fields: [eventId], references: [id], map: "like_event_fk")
+  eventId   Int
+  comment   Comment?  @relation(fields: [commentId], references: [id], map: "like_comment_fk")
+  commentId Int?
   user      User      @relation(fields: [userId], references: [id])
   userId    Int
-  type      LikeType  @relation(fields: [typeId], references: [id])
-  typeId    Int
+  // type      LikeType  @relation(fields: [typeId], references: [id])
+  // typeId    Int
   like      Int
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

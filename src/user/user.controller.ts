@@ -11,7 +11,7 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger'
 @ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   /**
    * Get one specific user record by username
