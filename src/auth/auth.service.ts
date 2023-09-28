@@ -83,6 +83,16 @@ export class AuthService {
       return response
     }
 
+    const userIsNotActivated: boolean = user?.isActivated == 0
+    if (userIsNotActivated) {
+      response = {
+        status: false,
+        status_code: httpStatus.BAD_REQUEST,
+        message: AuthMessage.NOT_ACTIVATED,
+      }
+      return response
+    }
+
     response = {
       status: true,
       status_code: httpStatus.OK,

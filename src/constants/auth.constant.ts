@@ -7,5 +7,7 @@ const AuthMessage = {
     'Uh-oh! It looks like you forgot to include an authentication token. To continue, please provide a valid authentication token.',
   TOKEN_INVALID:
     'Oops! The authentication token you provided is invalid. Please ensure you have the correct token and try again.',
+  NOT_ACTIVATED:
+    'Login failed. Your account is not yet activated. Please check your email for an activation link or contact support for assistance.',
 }
 export default AuthMessage
