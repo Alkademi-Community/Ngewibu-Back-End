@@ -1,5 +1,5 @@
 // index seed.ts
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 import { faker, id_ID } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { GenderSeeder } from './gender_seed';
