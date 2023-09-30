@@ -1,4 +1,5 @@
 // prisma/seed.ts
+import * as bcrypt from 'bcrypt'
 
 function fakerUser(faker): [any, any] {
     let firstName = faker.person.firstName();
@@ -7,7 +8,7 @@ function fakerUser(faker): [any, any] {
     let user = {
         username: faker.internet.userName({ firstName, lastName }),
         email: faker.internet.email(),
-        password: faker.internet.password({ length: 20, memorable: true }),
+        password: "test",
         roleId: faker.number.int({ min: 1, max: 2 }),
         token: faker.string.alpha(20),
         resetPasswordToken: faker.string.alpha(20),
@@ -31,16 +32,16 @@ export async function UserSeeder(prisma, faker) {
     await prisma.user.create({
         data:
         {
-            id: 0,
+            id: 1,
             username: 'admin',
-            password: "admin@111",
+            password: "test",
             email: 'admin@ngewibu.com',
             roleId: 2,
         },
     });
     await prisma.userProfile.create({
         data: {
-            userId: 0,
+            userId: 1,
             genderId: 1,
             name: 'admin',
             address: faker.location.streetAddress({ useFullAddress: true }),
@@ -50,7 +51,7 @@ export async function UserSeeder(prisma, faker) {
         }
     });
 
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 2; i <= 20; i++) {
         let [user, userProfile] = fakerUser(faker)
         user.id = i;
         userProfile.userId = i;

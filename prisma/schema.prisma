@@ -103,7 +103,7 @@ model UserProfile {
   genderId    Int
   name        String
   address     String?
-  bio         String?
+  bio         String?   @db.Text()
   dateOfBirth DateTime? @db.Date()
   imageUrl    String?
   createdAt   DateTime? @default(now())
@@ -122,7 +122,7 @@ model Event {
   cityId            Int
   title             String
   slug              String             @unique
-  description       String?
+  description       String?            @db.Text()
   address           String
   mapUrl            String?
   meetUrl           String?
@@ -156,7 +156,7 @@ model Comment {
   Children  Comment[] @relation("Comment_Children")
   comment   Comment?  @relation("Comment_Children", fields: [commentId], references: [id], map: "comment_comment_fk")
   commentId Int?
-  content   String
+  content   String    @db.Text()
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
   deletedAt DateTime?

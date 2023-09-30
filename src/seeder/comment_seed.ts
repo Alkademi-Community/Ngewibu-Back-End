@@ -13,7 +13,7 @@ function fakerComment(faker): any {
     return {
         userId: faker.number.int({ min: 1, max: 10 }),
         eventId: faker.number.int({ min: 1, max: 10 }),
-        commentId: faker.helpers.arrayElement([null, null, null, null, null, null, null, 2, null, 1, null, 1, null, null, 2, 2, null, null, null, null]),
+        commentId: faker.helpers.arrayElement([null, null, 2, null, 1, null, 1, null, null, 2, 2, null, null, null, null]),
         // typeId: faker.number.int({ min: 1, max: 2 }),
         content: faker.word.words({ count: { min: 3, max: 30 } }),
     }
