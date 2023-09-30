@@ -8,7 +8,7 @@ function fakerUser(faker): [any, any] {
     let user = {
         username: faker.internet.userName({ firstName, lastName }),
         email: faker.internet.email(),
-        password: "test",
+        password: bcrypt.hashSync("podokabeh", 10),
         roleId: faker.number.int({ min: 1, max: 2 }),
         token: faker.string.alpha(20),
         resetPasswordToken: faker.string.alpha(20),
@@ -34,7 +34,7 @@ export async function UserSeeder(prisma, faker) {
         {
             id: 1,
             username: 'admin',
-            password: "test",
+            password: bcrypt.hashSync("admin@111", 10),
             email: 'admin@ngewibu.com',
             roleId: 2,
         },

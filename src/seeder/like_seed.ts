@@ -12,7 +12,7 @@ function fakerLikeType(): any {
 function fakerLike(faker): any {
     return {
         eventId: faker.number.int({ min: 1, max: 10 }),
-        commentId: faker.helpers.arrayElement([null, null, 2, null, 1, null, 1, null, null, 2, 2, null, null, null, null]),
+        commentId: faker.helpers.arrayElement([null, null, null, 1, null, 1, 1, null, 2, 2, null, null, null, 1]),
         userId: faker.number.int({ min: 1, max: 10 }),
         // typeId: faker.number.int({ min: 1, max: 2 }),
         like: 1,
