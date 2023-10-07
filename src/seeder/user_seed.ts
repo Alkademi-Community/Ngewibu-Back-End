@@ -9,7 +9,7 @@ function fakerUser(faker): [any, any] {
         username: faker.internet.userName({ firstName, lastName }),
         email: faker.internet.email(),
         password: bcrypt.hashSync("podokabeh", 10),
-        roleId: faker.number.int({ min: 1, max: 2 }),
+        roleId: 2,
         token: faker.string.alpha(20),
         resetPasswordToken: faker.string.alpha(20),
         isActivated: faker.number.int(1),
@@ -36,7 +36,9 @@ export async function UserSeeder(prisma, faker) {
             username: 'admin',
             password: bcrypt.hashSync("admin@111", 10),
             email: 'admin@ngewibu.com',
-            roleId: 2,
+            roleId: 1,
+            isActivated: 1,
+            isVerified: 1
         },
     });
     await prisma.userProfile.create({

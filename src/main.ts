@@ -42,5 +42,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
   await app.listen(config.get('server_port'), '0.0.0.0')
+  console.log("\n\u001b[32minfo" + "\u001b[0m: serving app on http://0.0.0.0:" + config.get('server_port'))
 }
 bootstrap()

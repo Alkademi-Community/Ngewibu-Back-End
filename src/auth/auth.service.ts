@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   /**
    * To generate jwt token based on the user information given
