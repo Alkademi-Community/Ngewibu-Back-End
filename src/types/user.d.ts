@@ -6,5 +6,10 @@ export type UserWithRole = Prisma.UserGetPayload<{
   }
 }>
 
+export enum Role {
+  USER = "user",
+  ADMIN = "admin",
+}
+
 export type UsernameType = string | null
 export type PasswordType = string | null

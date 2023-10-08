@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/service/prisma.service'
 import { Prisma, User } from '@prisma/client'
 import { UserWithRole } from 'src/types/user'
+import { UpdateUserPasswordDto } from 'src/validation/user/index.dts'
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   // allowed fields to display
   public USER_SAFE_FIELDS = {
@@ -61,11 +62,11 @@ export class UserService {
     return this.prisma.user.create({ data })
   }
 
-  async updateUser(id: number, data: User): Promise<User> {
+  async updateUser(id: number, data: UpdateUserPasswordDto): Promise<User> {
     return this.prisma.user.update({
       where: { id: Number(id) },
       data: {
-        password: data.password,
+        password: data.password || undefined,
       },
     })
   }

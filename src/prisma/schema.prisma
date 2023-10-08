@@ -13,7 +13,7 @@ datasource db {
 // lookup migrations
 model Role {
   id        Int       @id @default(autoincrement())
-  name      String
+  name      String    @unique
   users     User[]
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
