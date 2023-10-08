@@ -1,9 +1,8 @@
-import { Controller, Get, Injectable, Post } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'src/service/prisma.service'
 import { Prisma, User } from '@prisma/client'
 import { UserWithRole } from 'src/types/user'
-import { ApiTags } from '@nestjs/swagger'
-import { UpdateUserDto } from 'src/validation/user/index.dts'
+import { UpdateUserPasswordDto } from 'src/validation/user/index.dts'
 
 @Injectable()
 export class UserService {
@@ -63,32 +62,14 @@ export class UserService {
     return this.prisma.user.create({ data })
   }
 
-  async updateUser(id: number, data: UpdateUserDto): Promise<User> {
+  async updateUser(id: number, data: UpdateUserPasswordDto): Promise<User> {
     return this.prisma.user.update({
       where: { id: Number(id) },
       data: {
         password: data.password || undefined,
-        isActivated: data.isActivated || undefined,
-        isVerified: data.isVerified || undefined,
-        roleId: data.roleId || undefined,
       },
     })
   }
-
-  // public async updateUser() {
-  //   // Assuming email, firstname and address fields exist in your prisma schema. 
-  //   const updateUser = await prisma.user.update({
-  //     where: {
-  //       email: 'viola@prisma.io',
-  //     },
-  //     data: {
-  //       // If req.firstname is falsy, then return undefined, otherwise return it's value
-  //       firstname: req.firstname || undefined,
-  //       email: req.email || undefined,
-  //       address: req.address || undefined
-  //     },
-  //   })
-  // }
 
   async deleteUser(id: number): Promise<User> {
     return this.prisma.user.delete({ where: { id: Number(id) } })

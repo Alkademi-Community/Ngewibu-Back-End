@@ -4,6 +4,7 @@ import {
   Get,
   Headers,
   Post,
+  Put,
   Req,
   Res,
   UploadedFile,
@@ -24,7 +25,7 @@ import { Request, Response } from 'express'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { StorageConstants } from 'src/constants/file.constant'
-import { UpdateUserProfile, UpdateUserDto } from 'src/validation/user/index.dts'
+import { UpdateUserProfile, UpdateUserPasswordDto } from 'src/validation/user/index.dts'
 import * as bcrypt from 'bcrypt'
 
 import {
@@ -157,17 +158,16 @@ export class UserController {
    * @returns {any}
    */
 
-  @Post('/:username')
+  @Put('/change/password')
   @ApiBearerAuth('Authorization')
-  @ApiParam({
-    name: 'username',
-    example: 'johndoe123',
-  })
+  // @ApiParam({
+  //   name: 'password',
+  //   example: 'johndoe123',
+  // })
   @UseGuards(IsAuthenticated)
-  public async updateUser(
+  public async updateUserPassword(
     @Headers() headers: Record<string, string>,
-    @Req() req: Request,
-    @Body() body: UpdateUserDto,
+    @Body() body: UpdateUserPasswordDto,
   ) {
     const authToken = this.sessionService.getAuthToken(headers)
     const sessionData: SessionData =
@@ -185,7 +185,7 @@ export class UserController {
     }
 
     const authUser: User | undefined | null = await this.userService.findOne(
-      sessionData?.username,
+      sessionData?.username, true
     )
 
     let userIsNotFound = [null, undefined].includes(authUser)
@@ -199,63 +199,35 @@ export class UserController {
       return response
     }
 
-    if (authUser.roleId != 1 && authUser.username != req?.params?.username) {
+    if (!body.password && !body.new_password) {
       response = {
         status: false,
-        status_code: httpStatus.UNAUTHORIZED,
-        message: "Forbidden access",
+        status_code: httpStatus.BAD_REQUEST,
+        message: AuthMessage.WRONG_PASSWORD,
       }
       return response
     }
 
-    const user: User | undefined | null = await this.userService.findOne(
-      req?.params?.username, true
+    const passwordIsValid: boolean = await bcrypt.compare(
+      body.password,
+      authUser?.password ?? '',
     )
 
-    userIsNotFound = [null, undefined].includes(user)
-    if (userIsNotFound) {
+    if (!passwordIsValid) {
       response = {
         status: false,
-        status_code: httpStatus.NOT_FOUND,
-        message: AuthMessage.USER_NOT_FOUND,
+        status_code: httpStatus.BAD_REQUEST,
+        message: AuthMessage.WRONG_PASSWORD,
       }
+
       return response
     }
 
-    if (body.password && body.new_password) {
-      const passwordIsValid: boolean = await bcrypt.compare(
-        body.password,
-        user?.password ?? '',
-      )
-
-      if (!passwordIsValid) {
-        response = {
-          status: false,
-          status_code: httpStatus.BAD_REQUEST,
-          message: AuthMessage.WRONG_PASSWORD,
-        }
-
-        return response
-      }
-
-      body.password = bcrypt.hashSync(body.new_password, 10)
-      body.new_password = undefined
-    } else {
-      body.password = undefined
-      body.new_password = undefined
-    }
-
-    if (authUser.roleId != 1) {
-      body.isActivated = undefined
-      body.isVerified = undefined
-      body.roleId = undefined
-      body.role = undefined
-    } else {
-      body.roleId = body.role == "user" ? 2 : 1
-    }
+    body.password = bcrypt.hashSync(body.new_password, 10)
+    body.new_password = undefined
 
     const result = await this.userService.updateUser(
-      user.id, body
+      authUser.id, body
 
     )
 

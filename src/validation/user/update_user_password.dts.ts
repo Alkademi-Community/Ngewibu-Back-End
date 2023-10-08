@@ -11,5 +11,6 @@ export class UpdateUserPasswordDto {
   @ApiProperty({
     example: 'new_password123',
   })
+  @IsNotEmpty()
   new_password: string
 }
