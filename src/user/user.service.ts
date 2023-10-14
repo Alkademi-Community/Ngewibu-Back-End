@@ -36,7 +36,7 @@ export class UserService {
   }
 
   /**
-   * Find one unique record based on username
+   * Find one unique record based on username or email
    * @param {any} username:string
    * @returns {any}
    */

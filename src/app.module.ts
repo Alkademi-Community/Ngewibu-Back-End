@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module'
 import configuration, { ExtraConfigLoad } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { join } from 'path'
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..'),
     }),
+    MailModule,
   ],
   controllers: [],
   providers: [],

@@ -38,10 +38,19 @@ export class AuthService {
       status_code: httpStatus.OK,
       message: '',
       data: {
-        token: await this.jwtService.sign(jwtPayload),
+        token: await this.jwtGenerate(jwtPayload),
       },
     }
     return response
+  }
+
+  /**
+   * To generate jwt token based on the user information given
+   * @param {any} jwtPayload:jwtPayload|null
+   * @returns {any}
+   */
+  public async jwtGenerate(jwtPayload) {
+    return await this.jwtService.sign(jwtPayload)
   }
 
   /**
