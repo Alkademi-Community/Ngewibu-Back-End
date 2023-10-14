@@ -13,18 +13,18 @@ import { ConfigService } from '@nestjs/config';
         // transport: config.get("MAIL_TRANSPORT"),
         // or
         transport: {
-          host: config.get('MAIL_HOST'),
+          host: config.get("MAIL_HOST"),
           secure: true,
           auth: {
-            user: config.get('MAIL_USER'),
-            pass: config.get('MAIL_PASSWORD'),
+            user: config.get("MAIL_USER"),
+            pass: config.get("MAIL_PASSWORD"),
           },
         },
         defaults: {
-          from: `"No Reply" <${config.get('MAIL_FROM')}>`,
+          from: `"No Reply" <${config.get("MAIL_FROM")}>`,
         },
         template: {
-          dir: join(__dirname, 'templates'),
+          dir: join(__dirname, "templates"),
           adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
           options: {
             strict: true,

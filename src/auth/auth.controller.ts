@@ -4,7 +4,6 @@ import { AuthService } from './auth.service'
 import { UserService } from 'src/user/user.service'
 import { ResponseData } from 'src/types/response'
 import { LoginDto } from 'src/validation/login.dts'
-import { ConfigService } from '@nestjs/config'
 import { ApiBearerAuth, ApiTags, ApiQuery } from '@nestjs/swagger'
 import { IsAuthenticated } from 'src/guard/is-authenticated.guard'
 import { UpdateUserPasswordDto } from 'src/validation/user/index.dts'
@@ -24,7 +23,6 @@ export class AuthController {
     private userService: UserService,
     private sessionService: SessionService,
     private mailService: MailService,
-    private config: ConfigService,
   ) { }
 
   @Post('login')
